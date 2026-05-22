@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dr. [Your Name] — CS Researcher</title>
+  <style>
+    /* ── Reset & base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0e1a;
+      --bg2:       #0f1526;
+      --bg3:       #151d35;
+      --accent:    #00e5ff;
+      --accent2:   #00b4cc;
+      --text:      #e0e6f0;
+      --muted:     #7a8aaa;
+      --border:    rgba(0, 229, 255, 0.15);
+      --glow:      0 0 20px rgba(0, 229, 255, 0.25);
+      --radius:    12px;
+      --nav-h:     68px;
+      --transition: 0.35s cubic-bezier(.25,.8,.25,1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 3px; }
+
+    /* ── Nav ──────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: rgba(10, 14, 26, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      z-index: 1000;
+      transition: background var(--transition);
+    }
+
+    .nav-logo {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: calc(var(--nav-h) + 2rem) 5% 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* animated grid background */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridScroll 20s linear infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes gridScroll {
+      to { background-position: 60px 60px; }
+    }
+
+    .hero-inner { position: relative; z-index: 1; max-width: 780px; }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(0,229,255,0.1);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0.4em 1.2em;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-name {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-name .accent { color: var(--accent); }
+
+    .hero-title {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Buttons ──────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1.5px solid var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: rgba(0,229,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    /* ── Section layout ───────────────────────────────────────── */
+    section {
+      padding: 6rem 5%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 80px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.4;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 3rem;
+      letter-spacing: -0.5px;
+    }
+
+    /* ── Card ─────────────────────────────────────────────────── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--glow);
+      border-color: rgba(0,229,255,0.35);
+    }
+
+    /* ── About ────────────────────────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .about-text p { color: var(--muted); margin-bottom: 1rem; }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--glow); }
+
+    .stat-num {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* ── Research interests ───────────────────────────────────── */
+    #research { background: var(--bg2); max-width: 100%; padding: 6rem 5%; }
+    #research > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
+    #research .section-title { max-width: 1100px; margin-left: auto; margin-right: auto; margin-bottom: 3rem; }
+
+    .research-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .research-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+
+    .research-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--glow);
+      border-color: rgba(0,229,255,0.35);
+    }
+
+    .research-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .research-card h3 { font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .research-card p  { font-size: 0.875rem; color: var(--muted); }
+
+    /* ── Publications ─────────────────────────────────────────── */
+    .pub-list { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .pub-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.25rem;
+      align-items: start;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+
+    .pub-card:hover {
+      transform: translateX(4px);
+      box-shadow: var(--glow);
+      border-color: rgba(0,229,255,0.35);
+    }
+
+    .pub-year {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    .pub-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.3rem; }
+
+    .pub-meta { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.6rem; }
+
+    .pub-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 0.25em 0.75em;
+      border-radius: 100px;
+      background: rgba(0,229,255,0.1);
+      border: 1px solid var(--border);
+      color: var(--accent);
+    }
+
+    /* ── Skills ───────────────────────────────────────────────── */
+    #skills { background: var(--bg2); max-width: 100%; padding: 6rem 5%; }
+
+    .skills-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skills-group h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .skill-item {
+      margin-bottom: 0.85rem;
+    }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .skill-pct { color: var(--accent); font-weight: 600; }
+
+    .skill-bar {
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 2px;
+      width: 0;
+      transition: width 1s ease;
+    }
+
+    /* ── Contact ──────────────────────────────────────────────── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .contact-info { color: var(--muted); }
+    .contact-info p { margin-bottom: 0.75rem; }
+
+    .contact-links { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color var(--transition);
+    }
+
+    .contact-link:hover { color: var(--accent); }
+
+    .contact-link .icon {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .contact-link:hover .icon {
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    /* form */
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--muted); }
+
+    .form-group input,
+    .form-group textarea {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
+    }
+
+    .form-group textarea { min-height: 120px; }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 2.5rem 5%;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    footer span { color: var(--accent); }
+
+    /* ── Fade-in animation observer ───────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0; right: 0;
+        background: rgba(10,14,26,0.97);
+        backdrop-filter: blur(14px);
+        flex-direction: column;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links li { border-bottom: 1px solid var(--border); }
+
+      .nav-links a {
+        display: block;
+        padding: 1rem 5%;
+        font-size: 1rem;
+      }
+
+      .hamburger { display: flex; }
+
+      .about-grid, .contact-grid { grid-template-columns: 1fr; }
+
+      .pub-card { grid-template-columns: 1fr; }
+
+      .about-stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ──────────────────────────────────────────────────── -->
+  <nav>
+    <a class="nav-logo" href="#hero">[YN]</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <div id="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">Computer Science Researcher</div>
+      <h1 class="hero-name">Dr. <span class="accent">[Your Name]</span></h1>
+      <p class="hero-title">Assistant Professor · Deep Learning &amp; AI Systems</p>
+      <p class="hero-desc">
+        Advancing the frontiers of machine intelligence through rigorous research
+        in deep learning, computer vision, and scalable AI systems.
+      </p>
+      <div class="hero-cta">
+        <a href="#publications" class="btn btn-primary">View Publications</a>
+        <a href="#contact" class="btn btn-outline">Get in Touch</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── About ─────────────────────────────────────────────────── -->
+  <section id="about">
+    <div class="section-label">01 — About</div>
+    <h2 class="section-title">Who I Am</h2>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>
+          I am a researcher and educator specializing in deep learning, neural
+          architecture design, and AI-driven data analysis. My work bridges
+          theoretical foundations with practical applications that matter.
+        </p>
+        <p>
+          Currently an Assistant Professor at [University Name], I lead the
+          Intelligent Systems Lab where we explore novel approaches to learning
+          from limited data, multimodal reasoning, and interpretable AI.
+        </p>
+        <p>
+          Before academia, I completed my Ph.D. at [Institution] under the
+          supervision of [Advisor Name], focusing on efficient neural networks
+          for resource-constrained environments.
+        </p>
+        <a href="#contact" class="btn btn-outline" style="margin-top:1rem; display:inline-flex;">
+          Download CV
+        </a>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-num">30+</div>
+          <div class="stat-label">Publications</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">1.2k</div>
+          <div class="stat-label">Citations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">8</div>
+          <div class="stat-label">Years Research</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">5</div>
+          <div class="stat-label">Active Projects</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Research Interests ────────────────────────────────────── -->
+  <div id="research">
+    <div class="section-label reveal" style="max-width:1100px;margin:0 auto;">02 — Research</div>
+    <h2 class="section-title reveal">Research Interests</h2>
+    <div class="research-grid">
+      <div class="research-card reveal">
+        <div class="research-icon">🧠</div>
+        <h3>Deep Learning</h3>
+        <p>Designing novel architectures for vision, language, and multimodal tasks with improved efficiency and generalization.</p>
+      </div>
+      <div class="research-card reveal">
+        <div class="research-icon">👁️</div>
+        <h3>Computer Vision</h3>
+        <p>Semantic segmentation, object detection, and scene understanding using convolutional and transformer-based models.</p>
+      </div>
+      <div class="research-card reveal">
+        <div class="research-icon">📊</div>
+        <h3>Interpretable AI</h3>
+        <p>Developing techniques to explain and visualize neural network decisions, making models trustworthy in critical domains.</p>
+      </div>
+      <div class="research-card reveal">
+        <div class="research-icon">⚡</div>
+        <h3>Efficient Inference</h3>
+        <p>Model compression, quantization, and knowledge distillation to deploy state-of-the-art models on edge devices.</p>
+      </div>
+      <div class="research-card reveal">
+        <div class="research-icon">🔬</div>
+        <h3>Medical Imaging</h3>
+        <p>AI-assisted diagnostics using CNNs and U-Net variants for tumor segmentation and pathology classification.</p>
+      </div>
+      <div class="research-card reveal">
+        <div class="research-icon">🌐</div>
+        <h3>Federated Learning</h3>
+        <p>Privacy-preserving distributed training across decentralized data sources without compromising model performance.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Publications ──────────────────────────────────────────── -->
+  <section id="publications">
+    <div class="section-label">03 — Publications</div>
+    <h2 class="section-title">Selected Publications</h2>
+    <div class="pub-list">
+
+      <div class="pub-card reveal">
+        <div class="pub-year">2024</div>
+        <div>
+          <div class="pub-title">EfficientSeg: Lightweight Semantic Segmentation via Dynamic Channel Pruning</div>
+          <div class="pub-meta">[Your Name], J. Smith, A. Khan · <em>CVPR 2024</em></div>
+          <div class="pub-tags">
+            <span class="tag">Computer Vision</span>
+            <span class="tag">Segmentation</span>
+            <span class="tag">Best Paper</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card reveal">
+        <div class="pub-year">2023</div>
+        <div>
+          <div class="pub-title">FedMed: Federated Learning for Multi-Site Medical Image Analysis</div>
+          <div class="pub-meta">[Your Name], L. Chen, R. Patel · <em>NeurIPS 2023</em></div>
+          <div class="pub-tags">
+            <span class="tag">Federated Learning</span>
+            <span class="tag">Medical Imaging</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card reveal">
+        <div class="pub-year">2023</div>
+        <div>
+          <div class="pub-title">Attention Bottleneck Networks for Multimodal Reasoning Under Distribution Shift</div>
+          <div class="pub-meta">[Your Name], M. Lee · <em>ICLR 2023</em></div>
+          <div class="pub-tags">
+            <span class="tag">Multimodal</span>
+            <span class="tag">Transformers</span>
+            <span class="tag">Oral</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-card reveal">
+        <div class="pub-year">2022</div>
+        <div>
+          <div class="pub-title">Calibrated Uncertainty in Deep Neural Networks via Spectral Normalization</div>
+          <div class="pub-meta">[Your Name], P. Gupta, S. Wei · <em>ICML 2022</em></div>
+          <div class="pub-tags">
+            <span class="tag">Uncertainty</span>
+            <span class="tag">Interpretability</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Skills ────────────────────────────────────────────────── -->
+  <div id="skills">
+    <div style="max-width:1100px;margin:0 auto;padding:0;">
+      <div class="section-label reveal">04 — Skills</div>
+      <h2 class="section-title reveal">Technical Skills</h2>
+    </div>
+    <div class="skills-grid">
+
+      <div class="card skills-group reveal">
+        <h3>Frameworks</h3>
+        <div class="skill-item">
+          <div class="skill-header"><span>PyTorch</span><span class="skill-pct">95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>TensorFlow</span><span class="skill-pct">85%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>JAX</span><span class="skill-pct">70%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="70"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>Hugging Face</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+        </div>
+      </div>
+
+      <div class="card skills-group reveal">
+        <h3>Languages</h3>
+        <div class="skill-item">
+          <div class="skill-header"><span>Python</span><span class="skill-pct">98%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="98"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>C++</span><span class="skill-pct">75%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>CUDA</span><span class="skill-pct">65%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="65"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>SQL</span><span class="skill-pct">80%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+        </div>
+      </div>
+
+      <div class="card skills-group reveal">
+        <h3>Research Tools</h3>
+        <div class="skill-item">
+          <div class="skill-header"><span>Weights &amp; Biases</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>LaTeX</span><span class="skill-pct">92%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="92"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>Docker / Kubernetes</span><span class="skill-pct">72%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="72"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span>Git / GitHub</span><span class="skill-pct">95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" data-width="95"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Contact ───────────────────────────────────────────────── -->
+  <section id="contact">
+    <div class="section-label">05 — Contact</div>
+    <h2 class="section-title">Get in Touch</h2>
+    <div class="contact-grid reveal">
+
+      <div>
+        <div class="contact-info">
+          <p>Interested in collaborating, discussing research, or have questions about my work? I'd love to hear from you.</p>
+          <p>I'm especially open to discussing joint projects in deep learning, PhD supervision inquiries, and industry partnerships.</p>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:your.email@university.edu" class="contact-link">
+            <div class="icon">✉</div>
+            your.email@university.edu
+          </a>
+          <a href="#" class="contact-link">
+            <div class="icon">🔗</div>
+            linkedin.com/in/yourname
+          </a>
+          <a href="#" class="contact-link">
+            <div class="icon">🐙</div>
+            github.com/yourname
+          </a>
+          <a href="#" class="contact-link">
+            <div class="icon">📄</div>
+            scholar.google.com
+          </a>
+        </div>
+      </div>
+
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Your name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" placeholder="Collaboration / PhD Inquiry / Other" />
+        </div>
+        <div class="form-group">
+          <label for="msg">Message</label>
+          <textarea id="msg" placeholder="Write your message here…" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="align-self:flex-start;">
+          Send Message
+        </button>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <footer>
+    <p>© 2026 <span>[Your Name]</span>. Crafted with research-grade attention to detail.</p>
+  </footer>
+
+  <!-- ── Scripts ───────────────────────────────────────────────── -->
+  <script>
+    /* hamburger toggle */
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('navLinks');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    /* close mobile menu on link click */
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    /* scroll-reveal observer */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          /* animate skill bars when they appear */
+          e.target.querySelectorAll('.skill-fill').forEach(bar => {
+            bar.style.width = bar.dataset.width + '%';
+          });
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* also observe skill sections that wrap bars */
+    document.querySelectorAll('.skills-group').forEach(el => observer.observe(el));
+
+    /* contact form stub */
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.textContent = 'Sent ✓';
+      btn.style.background = '#00b4cc';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = 'Send Message';
+        btn.style.background = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
